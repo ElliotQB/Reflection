@@ -27,6 +27,7 @@ func main() {
 
 	camera := rl.NewCamera2D(rl.NewVector2(0, float32(-rl.GetScreenHeight()/2)), rl.NewVector2(0, 0), 0, 1)
 	cameraY := float32(0)
+	tweenCameraY := float32(0)
 
 	rl.SetTargetFPS(60)
 
@@ -36,8 +37,9 @@ func main() {
 		game.Input.UpdateInput()
 		game.Player.PlayerTick()
 
-		cameraY = float32(math.Min(0, float64(game.Player.Y-float32(rl.GetScreenHeight()))))
-		camera.Target.Y = cameraY
+		cameraY = float32(math.Min(float64(rl.GetScreenHeight()/2), float64(float32(int32(game.Player.Y))-float32(rl.GetScreenHeight())+float32(rl.GetScreenHeight()))))
+		tweenCameraY = tweenCameraY + (cameraY-tweenCameraY)*0.1
+		camera.Target.Y = tweenCameraY - float32(rl.GetScreenHeight())
 
 		// drawing
 		rl.BeginDrawing()
@@ -47,8 +49,7 @@ func main() {
 			game.Blocks[i].DrawBlock()
 		}
 		game.Player.DrawPlayer()
-
-		rl.DrawRectangle(int32(rl.GetScreenWidth()/2)-int32(game.LineWidth)/2, int32(cameraY), int32(game.LineWidth), int32(rl.GetScreenHeight()), rl.Pink)
+		rl.DrawRectangle(int32(rl.GetScreenWidth()/2)-int32(game.LineWidth)/2, int32(tweenCameraY-float32(rl.GetScreenHeight()/2)), int32(game.LineWidth), int32(rl.GetScreenHeight()), rl.Pink)
 		rl.EndMode2D()
 		rl.EndDrawing()
 	}
