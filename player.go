@@ -6,7 +6,7 @@ type Player struct {
 	X    float32
 	Y    float32
 	Size float32
-	game *Game
+	Game *Game
 }
 
 func NewPlayer(x float32, y float32, gameState *Game) Player {
@@ -17,8 +17,15 @@ func (p *Player) PlayerTick() {
 
 }
 
-func (p *Player) PlayerCollision() {
+func (p *Player) PlayerCollision() bool {
+	for i := 0; i < len(p.Game.Blocks); i++ {
+		block := p.Game.Blocks[i]
 
+		if RectangleCollision(rl.NewVector2(p.X, p.Y), rl.NewVector2(p.Size, p.Size), rl.NewVector2(block.X, block.Y), rl.NewVector2(block.Width, block.Height)) {
+			return true
+		}
+	}
+	return false
 }
 
 func (p *Player) DrawPlayer() {
