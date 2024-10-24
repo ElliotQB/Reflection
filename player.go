@@ -1,27 +1,102 @@
 package main
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	"math"
+
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 type Player struct {
-	X    float32
-	Y    float32
-	Size float32
-	Game *Game
+	X            float32
+	Y            float32
+	Hsp          float32
+	Vsp          float32
+	MaxHsp       float32
+	AccelXGround float32
+	DecelXGround float32
+	AccelXAir    float32
+	DecelXAir    float32
+	Grv          float32
+	OnGround     bool
+	JumpStrength float32
+	Size         float32
+	Game         *Game
 }
 
 func NewPlayer(x float32, y float32, gameState *Game) Player {
-	return Player{x, y, 10, gameState}
+	grv := float32(0.3)
+	size := float32(50)
+	jumpstrength := float32(-12)
+	accelXGround := float32(0.8)
+	decelXGround := float32(0.8)
+	accelXAir := float32(0.4)
+	decelXAir := float32(0.2)
+	maxHsp := float32(5)
+
+	return Player{x, y, 0, 0, maxHsp, accelXGround, decelXGround, accelXAir, decelXAir, grv, false, jumpstrength, size, gameState}
 }
 
 func (p *Player) PlayerTick() {
 
+	// check if the player is on the ground
+	p.OnGround = p.PlayerCollision(p.X, p.Y+1)
+
+	// get input for horizontal movement
+	moveX := BoolToInt(p.Game.Input.Right) - BoolToInt(p.Game.Input.Left)
+
+	// clean accel/decel variables
+	accelX := p.AccelXAir
+	decelX := p.DecelXAir
+	if p.OnGround {
+		accelX = p.AccelXGround
+		decelX = p.DecelXGround
+	}
+
+	// accellerate or decelerate player based on what direction they're pressing
+	if moveX == 1 {
+		p.Hsp = min(p.MaxHsp, p.Hsp+accelX)
+	} else if moveX == -1 {
+		p.Hsp = max(-p.MaxHsp, p.Hsp-accelX)
+	} else {
+		p.Hsp = MoveValue(p.Hsp, 0, decelX)
+	}
+
+	// pull the player down with gravity
+	p.Vsp += p.Grv
+
+	// jump
+	if p.Game.Input.JumpInstant && p.OnGround {
+		p.Vsp = p.JumpStrength
+	}
+
+	// horizontal collision
+	if p.PlayerCollision(p.X+p.Hsp, p.Y) {
+		p.X = float32(math.Round(float64(p.X)))
+		for !p.PlayerCollision(p.X+Sign(p.Hsp), p.Y) {
+			p.X += Sign(p.Hsp)
+		}
+		p.Hsp = 0
+	}
+
+	// vertical collision
+	if p.PlayerCollision(p.X, p.Y+p.Vsp) {
+		p.Y = float32(math.Round(float64(p.Y)))
+		for !p.PlayerCollision(p.X, p.Y+Sign(p.Vsp)) {
+			p.Y += Sign(p.Vsp)
+		}
+		p.Vsp = 0
+	}
+
+	// apply speeds
+	p.X += p.Hsp
+	p.Y += p.Vsp
 }
 
-func (p *Player) PlayerCollision() bool {
+func (p *Player) PlayerCollision(x float32, y float32) bool {
 	for i := 0; i < len(p.Game.Blocks); i++ {
 		block := p.Game.Blocks[i]
 
-		if RectangleCollision(rl.NewVector2(p.X, p.Y), rl.NewVector2(p.Size, p.Size), rl.NewVector2(block.X, block.Y), rl.NewVector2(block.Width, block.Height)) {
+		if RectangleCollision(rl.NewVector2(x, y), rl.NewVector2(p.Size, p.Size), rl.NewVector2(block.X, block.Y), rl.NewVector2(block.Width, block.Height)) {
 			return true
 		}
 	}
@@ -29,5 +104,5 @@ func (p *Player) PlayerCollision() bool {
 }
 
 func (p *Player) DrawPlayer() {
-	rl.DrawRectangle(int32(p.X-(p.Size/2)), int32(p.Y-(p.Size/2)), int32(p.Size), int32(p.Size), rl.DarkBlue)
+	rl.DrawRectangle(int32(p.X), int32(p.Y), int32(p.Size), int32(p.Size), rl.DarkBlue)
 }
