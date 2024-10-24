@@ -7,33 +7,36 @@ import (
 )
 
 type Player struct {
-	X            float32
-	Y            float32
-	Hsp          float32
-	Vsp          float32
-	MaxHsp       float32
-	AccelXGround float32
-	DecelXGround float32
-	AccelXAir    float32
-	DecelXAir    float32
-	Grv          float32
-	OnGround     bool
-	JumpStrength float32
-	Size         float32
-	Game         *Game
+	X             float32
+	Y             float32
+	Hsp           float32
+	Vsp           float32
+	MaxHsp        float32
+	AccelXGround  float32
+	DecelXGround  float32
+	AccelXAir     float32
+	DecelXAir     float32
+	Grv           float32
+	OnGround      bool
+	JumpStrength  float32
+	JumpBuffer    float32
+	SetJumpBuffer float32
+	Size          float32
+	Game          *Game
 }
 
 func NewPlayer(x float32, y float32, gameState *Game) Player {
-	grv := float32(0.3)
+	grv := float32(0.4)
 	size := float32(50)
 	jumpstrength := float32(-12)
-	accelXGround := float32(0.8)
-	decelXGround := float32(0.8)
+	accelXGround := float32(1)
+	decelXGround := float32(1)
 	accelXAir := float32(0.4)
 	decelXAir := float32(0.2)
-	maxHsp := float32(5)
+	maxHsp := float32(6)
+	jumpBuffer := float32(10)
 
-	return Player{x, y, 0, 0, maxHsp, accelXGround, decelXGround, accelXAir, decelXAir, grv, false, jumpstrength, size, gameState}
+	return Player{x, y, 0, 0, maxHsp, accelXGround, decelXGround, accelXAir, decelXAir, grv, false, jumpstrength, 0, jumpBuffer, size, gameState}
 }
 
 func (p *Player) PlayerTick() {
@@ -65,7 +68,12 @@ func (p *Player) PlayerTick() {
 	p.Vsp += p.Grv
 
 	// jump
-	if p.Game.Input.JumpInstant && p.OnGround {
+	p.JumpBuffer = max(0, p.JumpBuffer-1)
+	if p.Game.Input.JumpInstant {
+		p.JumpBuffer = p.SetJumpBuffer
+	}
+	if p.JumpBuffer > 0 && p.OnGround {
+
 		p.Vsp = p.JumpStrength
 	}
 
@@ -85,6 +93,16 @@ func (p *Player) PlayerTick() {
 			p.Y += Sign(p.Vsp)
 		}
 		p.Vsp = 0
+	}
+
+	// clamp player inside screen
+	if p.X < 0 {
+		p.X = 0
+		p.Hsp = 0
+	}
+	if p.X > float32(rl.GetScreenWidth()/2)-(p.Game.LineWidth/2)-p.Size {
+		p.X = float32(rl.GetScreenWidth()/2) - (p.Game.LineWidth / 2) - p.Size
+		p.Hsp = 0
 	}
 
 	// apply speeds
