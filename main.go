@@ -47,7 +47,7 @@ func main() {
 			game.Blocks[i].DrawBlock()
 		}
 		game.Player.DrawPlayer()
-		rl.DrawRectangle(int32(rl.GetScreenWidth()/2)-int32(game.LineWidth)/2, 0, int32(game.LineWidth), int32(rl.GetScreenHeight()), rl.Pink)
+		rl.DrawRectangle(int32(rl.GetScreenWidth()/2)-int32(game.LineWidth)/2, int32(cameraY), int32(game.LineWidth), int32(rl.GetScreenHeight()), rl.Pink)
 		rl.EndMode2D()
 		rl.EndDrawing()
 	}
