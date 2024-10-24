@@ -3,13 +3,14 @@ package main
 import rl "github.com/gen2brain/raylib-go/raylib"
 
 type Game struct {
-	Blocks []Block
-	Player Player
-	Input  Input
+	Blocks    []Block
+	Player    Player
+	Input     Input
+	LineWidth float32
 }
 
 func NewGame() Game {
-	return Game{[]Block{}, Player{}, Input{}}
+	return Game{[]Block{}, Player{}, Input{}, 20}
 }
 
 func RectangleCollision(pos1 rl.Vector2, size1 rl.Vector2, pos2 rl.Vector2, size2 rl.Vector2) bool {
