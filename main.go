@@ -7,7 +7,7 @@ func main() {
 	defer rl.CloseWindow()
 	input := NewInput()
 	game := NewGame()
-	game.Blocks = append(game.Blocks, NewBlock(0, float32(rl.GetScreenHeight()-50), float32(rl.GetScreenWidth()), 50, &game))
+	game.Blocks = append(game.Blocks, NewBlock(0, float32(rl.GetScreenHeight()-50), float32(rl.GetScreenWidth()), 50, &game, false))
 
 	rl.SetTargetFPS(60)
 
