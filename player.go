@@ -122,5 +122,7 @@ func (p *Player) PlayerCollision(x float32, y float32) bool {
 }
 
 func (p *Player) DrawPlayer() {
+	x := float32(rl.GetScreenWidth()) - p.X - p.Size
+	rl.DrawRectangle(int32(x), int32(p.Y), int32(p.Size), int32(p.Size), rl.DarkBlue)
 	rl.DrawRectangle(int32(p.X), int32(p.Y), int32(p.Size), int32(p.Size), rl.DarkBlue)
 }
