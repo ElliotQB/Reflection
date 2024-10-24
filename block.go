@@ -7,10 +7,11 @@ type Block struct {
 	Y      float32
 	Width  float32
 	Height float32
+	Game   *Game
 }
 
-func NewBlock(x float32, y float32, width float32, height float32) Block {
-	return Block{x, y, width, height}
+func NewBlock(x float32, y float32, width float32, height float32, game *Game) Block {
+	return Block{x, y, width, height, game}
 }
 
 func (b *Block) DrawBlock() {
