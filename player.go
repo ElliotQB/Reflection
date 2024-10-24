@@ -18,6 +18,9 @@ type Player struct {
 	DecelXAir     float32
 	Grv           float32
 	OnGround      bool
+	OnGroundCT    bool
+	CTTime        float32
+	CTCurrentTime float32
 	JumpStrength  float32
 	JumpBuffer    float32
 	SetJumpBuffer float32
@@ -35,14 +38,25 @@ func NewPlayer(x float32, y float32, gameState *Game) Player {
 	decelXAir := float32(0.2)
 	maxHsp := float32(7)
 	jumpBuffer := float32(10)
+	coyoteTime := float32(8)
 
-	return Player{x, y, 0, 0, maxHsp, accelXGround, decelXGround, accelXAir, decelXAir, grv, false, jumpstrength, 0, jumpBuffer, size, gameState}
+	return Player{x, y, 0, 0, maxHsp, accelXGround, decelXGround, accelXAir, decelXAir, grv, false, false, coyoteTime, 0, jumpstrength, 0, jumpBuffer, size, gameState}
 }
 
 func (p *Player) PlayerTick() {
 
 	// check if the player is on the ground
 	p.OnGround = p.PlayerCollision(p.X, p.Y+1)
+
+	// coyote time
+	if p.OnGround {
+		p.OnGroundCT = true
+		p.CTCurrentTime = p.CTTime
+	}
+	if p.CTCurrentTime == 0 && !p.OnGround {
+		p.OnGroundCT = false
+	}
+	p.CTCurrentTime = max(0, p.CTCurrentTime-1)
 
 	// get input for horizontal movement
 	moveX := BoolToInt(p.Game.Input.Right) - BoolToInt(p.Game.Input.Left)
@@ -72,9 +86,11 @@ func (p *Player) PlayerTick() {
 	if p.Game.Input.JumpInstant {
 		p.JumpBuffer = p.SetJumpBuffer
 	}
-	if p.JumpBuffer > 0 && p.OnGround {
+	if p.JumpBuffer > 0 && p.OnGroundCT {
 
 		p.Vsp = p.JumpStrength
+		p.OnGroundCT = false
+		p.OnGround = false
 	}
 
 	// horizontal collision
