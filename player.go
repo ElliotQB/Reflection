@@ -26,14 +26,14 @@ type Player struct {
 }
 
 func NewPlayer(x float32, y float32, gameState *Game) Player {
-	grv := float32(0.4)
+	grv := float32(0.35)
 	size := float32(50)
 	jumpstrength := float32(-12)
 	accelXGround := float32(1)
 	decelXGround := float32(1)
 	accelXAir := float32(0.4)
 	decelXAir := float32(0.2)
-	maxHsp := float32(6)
+	maxHsp := float32(7)
 	jumpBuffer := float32(10)
 
 	return Player{x, y, 0, 0, maxHsp, accelXGround, decelXGround, accelXAir, decelXAir, grv, false, jumpstrength, 0, jumpBuffer, size, gameState}

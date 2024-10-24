@@ -25,6 +25,14 @@ func BoolToInt(val bool) int {
 	}
 }
 
+func FloatToBool(val float32) bool {
+	if val == 0 {
+		return false
+	} else {
+		return true
+	}
+}
+
 func Sign(val float32) float32 {
 	if val > 0 {
 		return 1
