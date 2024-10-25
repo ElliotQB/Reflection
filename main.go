@@ -24,7 +24,9 @@ func main() {
 
 	game.Blocks = append(game.Blocks, NewBlock(0, float32(rl.GetScreenHeight()-groundHeight), float32(rl.GetScreenWidth()), float32(groundHeight), &game, false))
 
-	for i := 0; i < 50; i++ {
+	numberBlocks := 50
+
+	for i := 0; i < numberBlocks; i++ {
 		blockWidth := 100
 		blockHeight := 30
 		game.Blocks = append(game.Blocks, NewBlock(rand.Float32()*float32((rl.GetScreenWidth()/2)-blockWidth), float32(rl.GetScreenHeight()-firstHeight-(gapSize*i)), float32(blockWidth), float32(blockHeight), &game, FloatToBool(float32(math.Round(rand.Float64())))))
