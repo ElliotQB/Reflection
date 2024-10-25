@@ -137,6 +137,17 @@ func (p *Player) PlayerCollision(x float32, y float32) bool {
 	return false
 }
 
+func (p *Player) PlayerInstancePlace(x float32, y float32) *Block {
+	for i := 0; i < len(p.Game.Blocks); i++ {
+		block := &p.Game.Blocks[i]
+
+		if RectangleCollision(rl.NewVector2(x, y), rl.NewVector2(p.Size, p.Size), rl.NewVector2(block.X, block.Y), rl.NewVector2(block.Width, block.Height)) {
+			return block
+		}
+	}
+	return nil
+}
+
 func (p *Player) DrawPlayer() {
 	x := float32(rl.GetScreenWidth()) - p.X - p.Size
 	rl.DrawRectangle(int32(x), int32(p.Y), int32(p.Size), int32(p.Size), rl.DarkBlue)
