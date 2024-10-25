@@ -56,7 +56,7 @@ func (p *Player) PlayerTick() {
 	if p.CTCurrentTime == 0 && !p.OnGround {
 		p.OnGroundCT = false
 	}
-	p.CTCurrentTime = max(0, p.CTCurrentTime-1)
+	p.CTCurrentTime = max(0, p.CTCurrentTime-p.Game.DM)
 
 	// get input for horizontal movement
 	moveX := BoolToInt(p.Game.Input.Right) - BoolToInt(p.Game.Input.Left)
@@ -71,18 +71,18 @@ func (p *Player) PlayerTick() {
 
 	// accellerate or decelerate player based on what direction they're pressing
 	if moveX == 1 {
-		p.Hsp = min(p.MaxHsp, p.Hsp+accelX)
+		p.Hsp = min(p.MaxHsp, p.Hsp+(accelX*p.Game.DM))
 	} else if moveX == -1 {
-		p.Hsp = max(-p.MaxHsp, p.Hsp-accelX)
+		p.Hsp = max(-p.MaxHsp, p.Hsp-(accelX*p.Game.DM))
 	} else {
-		p.Hsp = MoveValue(p.Hsp, 0, decelX)
+		p.Hsp = MoveValue(p.Hsp, 0, (decelX * p.Game.DM))
 	}
 
 	// pull the player down with gravity
-	p.Vsp += p.Grv
+	p.Vsp += (p.Grv * p.Game.DM)
 
 	// jump
-	p.JumpBuffer = max(0, p.JumpBuffer-1)
+	p.JumpBuffer = max(0, p.JumpBuffer-p.Game.DM)
 	if p.Game.Input.JumpInstant {
 		p.JumpBuffer = p.SetJumpBuffer
 	}
@@ -94,7 +94,7 @@ func (p *Player) PlayerTick() {
 	}
 
 	// horizontal collision
-	if p.PlayerCollision(p.X+p.Hsp, p.Y) {
+	if p.PlayerCollision(p.X+(p.Hsp*p.Game.DM), p.Y) {
 		p.X = float32(math.Round(float64(p.X)))
 		for !p.PlayerCollision(p.X+Sign(p.Hsp), p.Y) {
 			p.X += Sign(p.Hsp)
@@ -103,12 +103,17 @@ func (p *Player) PlayerTick() {
 	}
 
 	// vertical collision
-	if p.PlayerCollision(p.X, p.Y+p.Vsp) {
+	if p.PlayerCollision(p.X, p.Y+(p.Vsp*p.Game.DM)) {
 		p.Y = float32(math.Round(float64(p.Y)))
 		for !p.PlayerCollision(p.X, p.Y+Sign(p.Vsp)) {
 			p.Y += Sign(p.Vsp)
 		}
 		p.Vsp = 0
+	}
+
+	// unstuck
+	for p.PlayerCollision(p.X, p.Y) && p.Hsp == 0 && p.Vsp == 0 {
+		p.Y--
 	}
 
 	// clamp player inside screen
@@ -122,8 +127,8 @@ func (p *Player) PlayerTick() {
 	}
 
 	// apply speeds
-	p.X += p.Hsp
-	p.Y += p.Vsp
+	p.X += p.Hsp * p.Game.DM
+	p.Y += p.Vsp * p.Game.DM
 }
 
 func (p *Player) PlayerCollision(x float32, y float32) bool {

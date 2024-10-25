@@ -10,10 +10,11 @@ type Game struct {
 	CurrentLevel int
 	RespawnTime  float32
 	GameState    float32
+	DM           float32
 }
 
 func NewGame() Game {
-	return Game{[]Block{}, Player{}, Input{}, 20, 0, 0, 0}
+	return Game{[]Block{}, Player{}, Input{}, 20, 0, 0, 0, 1}
 }
 
 func RectangleCollision(pos1 rl.Vector2, size1 rl.Vector2, pos2 rl.Vector2, size2 rl.Vector2) bool {

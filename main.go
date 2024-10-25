@@ -41,6 +41,8 @@ func main() {
 
 	firstHeightAbs := float32(rl.GetScreenHeight()) - float32(groundHeight) - float32(firstHeight) + float32(game.Player.Size)
 
+	goal := NewGoal(float32(rl.GetScreenWidth()/4), firstHeightAbs-(float32(gapSize)*float32(numberBlocks)))
+
 	lastStoodOn := &game.Blocks[0]
 
 	rl.SetTargetFPS(60)
@@ -48,6 +50,7 @@ func main() {
 	for !rl.WindowShouldClose() {
 
 		// game logic
+		game.DM = rl.GetFrameTime() * 60
 		if game.GameState == 0 {
 			game.Input.UpdateInput()
 			game.Player.PlayerTick()
@@ -58,7 +61,7 @@ func main() {
 			}
 
 		} else if game.GameState == 1 {
-			game.RespawnTime = max(0, game.RespawnTime-1)
+			game.RespawnTime = max(0, game.RespawnTime-game.DM)
 			if game.RespawnTime == 0 {
 				game.GameState = 0
 				game.Player.X = lastStoodOn.X + (lastStoodOn.Width / 2) - (game.Player.Size / 2)
@@ -69,7 +72,7 @@ func main() {
 		}
 
 		cameraY = float32(math.Min(cameraLowerBound, float64(float32(int32(game.Player.Y))-float32(rl.GetScreenHeight())+float32(rl.GetScreenHeight()))))
-		tweenCameraY = tweenCameraY + (cameraY-tweenCameraY)*0.1
+		tweenCameraY = tweenCameraY + (cameraY-tweenCameraY)*(0.1*game.DM)
 		camera.Target.Y = tweenCameraY - float32(rl.GetScreenHeight())
 
 		if game.Player.Y < float32(firstHeightAbs)-float32(gapSize*game.CurrentLevel) {
@@ -94,6 +97,7 @@ func main() {
 		for i := 0; i < len(game.Blocks); i++ {
 			game.Blocks[i].DrawBlock()
 		}
+		goal.DrawGoal()
 		game.Player.DrawPlayer()
 		rl.DrawRectangle(int32(rl.GetScreenWidth()/2)-int32(game.LineWidth)/2, int32(tweenCameraY-float32(rl.GetScreenHeight()/2)), int32(game.LineWidth), int32(rl.GetScreenHeight()), rl.Pink)
 		//rl.DrawCircle(int32(lastStoodOn.X), int32(lastStoodOn.Y), 10, rl.Red)

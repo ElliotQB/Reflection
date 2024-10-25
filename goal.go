@@ -10,12 +10,12 @@ type Goal struct {
 	Radius float32
 }
 
-func NewGoal(x float32, y float32, radius float32) Goal {
-	return Goal{x, y, 150}
+func NewGoal(x float32, y float32) Goal {
+	return Goal{x, y, 50}
 }
 
 func (g *Goal) DrawGoal() {
 	x := float32(rl.GetScreenWidth()) - g.X
-	rl.DrawCircle(int32(x), int32(g.Y), g.Radius, rl.DarkBlue)
-	rl.DrawCircle(int32(g.X), int32(g.Y), g.Radius, rl.SkyBlue)
+	rl.DrawCircle(int32(x), int32(g.Y), g.Radius, rl.Green)
+	rl.DrawCircle(int32(g.X), int32(g.Y), g.Radius, rl.DarkGreen)
 }
