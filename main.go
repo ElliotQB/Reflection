@@ -22,18 +22,14 @@ func main() {
 
 	game.Player = NewPlayer(float32(rl.GetScreenWidth()/4), float32(rl.GetScreenHeight()-100-50), &game)
 
-	game.Blocks = append(game.Blocks, NewBlock(0, float32(rl.GetScreenHeight()-groundHeight), float32(rl.GetScreenWidth()), float32(groundHeight), &game, false))
+	numberBlocks := 25
 
-	numberBlocks := 50
-
-	for i := 0; i < numberBlocks; i++ {
-		blockWidth := 100
-		blockHeight := 30
-		game.Blocks = append(game.Blocks, NewBlock(rand.Float32()*float32((rl.GetScreenWidth()/2)-blockWidth), float32(rl.GetScreenHeight()-firstHeight-(gapSize*i)), float32(blockWidth), float32(blockHeight), &game, FloatToBool(float32(math.Round(rand.Float64())))))
-	}
+	game.SpawnBlocks(numberBlocks, float32(firstHeight), float32(gapSize), float32(groundHeight))
 
 	camera := rl.NewCamera2D(rl.NewVector2(0, float32(-rl.GetScreenHeight()/2)), rl.NewVector2(0, 0), 0, 1)
 	cameraY := float32(0)
+	cameraSpeed := float32(0.1)
+	cameraMaxSpeed := float32(math.Inf(1))
 	tweenCameraY := float32(0)
 	cameraLowerBound := float64(rl.GetScreenHeight() / 2)
 
@@ -41,7 +37,7 @@ func main() {
 
 	firstHeightAbs := float32(rl.GetScreenHeight()) - float32(groundHeight) - float32(firstHeight) + float32(game.Player.Size)
 
-	goal := NewGoal(float32(rl.GetScreenWidth()/4), firstHeightAbs-(float32(gapSize)*float32(numberBlocks)))
+	goal := NewGoal(float32(rl.GetScreenWidth()/4), firstHeightAbs-(float32(gapSize)*(float32(numberBlocks)+0.4)))
 
 	lastStoodOn := &game.Blocks[0]
 
@@ -69,13 +65,27 @@ func main() {
 				game.Player.Hsp = 0
 				game.Player.Vsp = 0
 			}
+		} else if game.GameState == 2 {
+			if math.Abs(float64(tweenCameraY)-float64(cameraY)) < 1 {
+				game.RespawnTime = max(0, game.RespawnTime-game.DM)
+			}
+			if game.RespawnTime == 0 {
+				game.RespawnTime = 0
+				game.SpawnBlocks(numberBlocks, float32(firstHeight), float32(gapSize), float32(groundHeight))
+				game.GameState = 0
+				lastStoodOn = &game.Blocks[0]
+				game.CurrentLevel = 0
+				cameraSpeed = 0.1
+				cameraMaxSpeed = float32(math.Inf(1))
+				game.Player = NewPlayer(float32(rl.GetScreenWidth()/4), float32(rl.GetScreenHeight()-100-50), &game)
+			}
 		}
 
 		cameraY = float32(math.Min(cameraLowerBound, float64(float32(int32(game.Player.Y))-float32(rl.GetScreenHeight())+float32(rl.GetScreenHeight()))))
-		tweenCameraY = tweenCameraY + (cameraY-tweenCameraY)*(0.1*game.DM)
+		tweenCameraY = tweenCameraY + rl.Clamp(cameraY-tweenCameraY, -cameraMaxSpeed, cameraMaxSpeed)*(cameraSpeed*game.DM)
 		camera.Target.Y = tweenCameraY - float32(rl.GetScreenHeight())
 
-		if game.Player.Y < float32(firstHeightAbs)-float32(gapSize*game.CurrentLevel) {
+		if game.Player.OnGround && game.Player.Y < float32(firstHeightAbs)-float32(gapSize*game.CurrentLevel) {
 			game.CurrentLevel++
 			if game.CurrentLevel > 5 {
 				cameraLowerBound = float64(firstHeightAbs) - (float64(gapSize) * float64(game.CurrentLevel-1))
@@ -90,6 +100,23 @@ func main() {
 			}
 		}
 
+		for i := 0; i < len(game.Blocks); i++ {
+			block := &game.Blocks[i]
+			block.DrawReflection = false
+			if game.Player.PlayerInstancePlace(game.Player.X, game.Player.Y+1) == block {
+				block.DrawReflection = true
+			}
+		}
+
+		if game.GameState != 2 && CircleRectangleCollision(rl.NewVector2(game.Player.X, game.Player.Y), rl.NewVector2(game.Player.Size, game.Player.Size), rl.NewVector2(goal.X, goal.Y), goal.Radius) {
+			game.GameState = 2
+			cameraLowerBound = float64(rl.GetScreenHeight() / 2)
+			game.RespawnTime = 30
+			game.Player.Y = game.Blocks[0].Y - game.Player.Size
+			cameraSpeed = 0.1
+			cameraMaxSpeed = 600
+		}
+
 		// drawing
 		rl.BeginDrawing()
 		rl.BeginMode2D(camera)
@@ -98,11 +125,32 @@ func main() {
 			game.Blocks[i].DrawBlock()
 		}
 		goal.DrawGoal()
-		game.Player.DrawPlayer()
+
+		if game.GameState != 2 {
+			game.Player.DrawPlayer()
+		}
 		rl.DrawRectangle(int32(rl.GetScreenWidth()/2)-int32(game.LineWidth)/2, int32(tweenCameraY-float32(rl.GetScreenHeight()/2)), int32(game.LineWidth), int32(rl.GetScreenHeight()), rl.Pink)
-		//rl.DrawCircle(int32(lastStoodOn.X), int32(lastStoodOn.Y), 10, rl.Red)
 		rl.EndMode2D()
-		rl.DrawText(strconv.Itoa(game.CurrentLevel), 15, 15, 20, rl.Beige)
+
+		text := strconv.Itoa(min(game.CurrentLevel, numberBlocks))
+		textSize := rl.MeasureText(text, 70)
+		rl.DrawText(text, 15, 15, 70, rl.DarkGray)
+		rl.DrawText(text, int32(rl.GetScreenWidth())-15-textSize, 15, 70, rl.LightGray)
+
 		rl.EndDrawing()
+	}
+}
+
+func (g *Game) SpawnBlocks(amount int, firstHeight float32, gapSize float32, groundHeight float32) {
+	g.Blocks = []Block{}
+
+	for i := 0; i < 2; i++ {
+		g.Blocks = append(g.Blocks, NewBlock(0, float32(rl.GetScreenHeight()-int(groundHeight)), float32(rl.GetScreenWidth()/2), float32(groundHeight), g, i == 0))
+	}
+
+	for i := 0; i < amount; i++ {
+		blockWidth := 100
+		blockHeight := 30
+		g.Blocks = append(g.Blocks, NewBlock(rand.Float32()*float32((rl.GetScreenWidth()/2)-blockWidth), float32(rl.GetScreenHeight()-int(firstHeight)-(int(gapSize)*i)), float32(blockWidth), float32(blockHeight), g, FloatToBool(float32(math.Round(rand.Float64())))))
 	}
 }

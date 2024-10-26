@@ -1,6 +1,10 @@
 package main
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	"math"
+
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 type Game struct {
 	Blocks       []Block
@@ -19,6 +23,16 @@ func NewGame() Game {
 
 func RectangleCollision(pos1 rl.Vector2, size1 rl.Vector2, pos2 rl.Vector2, size2 rl.Vector2) bool {
 	return pos1.X+size1.X > pos2.X && pos1.X < pos2.X+size2.X && pos1.Y+size1.Y > pos2.Y && pos1.Y < pos2.Y+size2.Y
+}
+
+func CircleCollision(circle1Pos rl.Vector2, circle1Radius float32, circle2Pos rl.Vector2, circle2Radius float32) bool {
+	dist := math.Sqrt(math.Pow(float64(circle2Pos.X-circle1Pos.X), 2) + math.Pow(float64(circle2Pos.Y-circle1Pos.Y), 2))
+	return dist <= float64(circle1Radius)+float64(circle2Radius)
+}
+
+func CircleRectangleCollision(pos1 rl.Vector2, size1 rl.Vector2, pos2 rl.Vector2, radius2 float32) bool {
+	closest := rl.NewVector2(rl.Clamp(pos2.X, pos1.X, pos1.X+size1.X), rl.Clamp(pos2.Y, pos1.Y, pos1.Y+size1.Y))
+	return CircleCollision(closest, 0, pos2, radius2)
 }
 
 func BoolToInt(val bool) int {

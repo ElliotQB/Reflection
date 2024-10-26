@@ -14,12 +14,12 @@ func NewInput() Input {
 }
 
 func (i *Input) UpdateInput() {
-	if rl.IsKeyDown(rl.KeyA) {
+	if rl.IsKeyDown(rl.KeyA) || rl.IsKeyDown(rl.KeyLeft) {
 		i.Left = true
 	} else {
 		i.Left = false
 	}
-	if rl.IsKeyDown(rl.KeyD) {
+	if rl.IsKeyDown(rl.KeyD) || rl.IsKeyDown(rl.KeyRight) {
 		i.Right = true
 	} else {
 		i.Right = false

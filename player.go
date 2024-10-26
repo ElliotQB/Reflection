@@ -90,7 +90,6 @@ func (p *Player) PlayerTick() {
 
 		p.Vsp = p.JumpStrength
 		p.OnGroundCT = false
-		p.OnGround = false
 	}
 
 	// horizontal collision
@@ -126,6 +125,14 @@ func (p *Player) PlayerTick() {
 		p.Hsp = 0
 	}
 
+	// keep player from falling out of the world
+	if p.Y > float32(rl.GetScreenHeight()+100) {
+		p.X = float32(rl.GetScreenWidth() / 4)
+		p.Y = p.Game.Blocks[0].Y - p.Size
+		p.Hsp = 0
+		p.Vsp = 0
+	}
+
 	// apply speeds
 	p.X += p.Hsp * p.Game.DM
 	p.Y += p.Vsp * p.Game.DM
@@ -155,6 +162,6 @@ func (p *Player) PlayerInstancePlace(x float32, y float32) *Block {
 
 func (p *Player) DrawPlayer() {
 	x := float32(rl.GetScreenWidth()) - p.X - p.Size
-	rl.DrawRectangle(int32(x), int32(p.Y), int32(p.Size), int32(p.Size), rl.DarkBlue)
-	rl.DrawRectangle(int32(p.X), int32(p.Y), int32(p.Size), int32(p.Size), rl.SkyBlue)
+	rl.DrawRectangle(int32(x), int32(p.Y), int32(p.Size), int32(p.Size), rl.SkyBlue)
+	rl.DrawRectangle(int32(p.X), int32(p.Y), int32(p.Size), int32(p.Size), rl.DarkBlue)
 }
