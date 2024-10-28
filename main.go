@@ -16,7 +16,7 @@ func main() {
 	groundHeight := 50
 	firstHeight := 210
 	gapSize := 150
-	numberBlocks := 25
+	numberBlocks := 60
 	respawnTime := 45
 
 	// create gameobjects
@@ -29,17 +29,17 @@ func main() {
 
 	// setup camera
 	camera := rl.NewCamera2D(rl.NewVector2(0, float32(-rl.GetScreenHeight()/2)), rl.NewVector2(0, 0), 0, 1)
-	cameraY := float32(0)
-	cameraSpeed := float32(0.1)
-	cameraMaxSpeed := float32(math.Inf(1))
-	tweenCameraY := float32(0)
-	cameraLowerBound := float64(rl.GetScreenHeight() / 2)
+	game.CameraY = float32(0)
+	game.CameraSpeed = float32(0.1)
+	game.CameraMaxSpeed = float32(1000000)
+	game.TweenCameraY = float32(0)
+	game.CameraLowerBound = float64(rl.GetScreenHeight() / 2)
 
 	firstHeightAbs := float32(rl.GetScreenHeight()) - float32(groundHeight) - float32(firstHeight) + float32(game.Player.Size)
 
 	goal := NewGoal(float32(rl.GetScreenWidth()/4), firstHeightAbs-(float32(gapSize)*(float32(numberBlocks)+0.4)))
 
-	lastStoodOn := &game.Blocks[0]
+	game.LastStoodOn = &game.Blocks[0]
 
 	rl.SetTargetFPS(60)
 
@@ -55,7 +55,7 @@ func main() {
 			game.Input.UpdateInput()
 			game.Player.PlayerTick()
 
-			if game.CurrentLevel > 5 && game.Player.Y > float32(cameraLowerBound+float64(rl.GetScreenHeight()/2)+10) {
+			if game.CurrentLevel > 5 && game.Player.Y > float32(game.CameraLowerBound+float64(rl.GetScreenHeight()/2)+10) {
 				game.GameState = 1
 				game.RespawnTime = float32(respawnTime)
 			}
@@ -66,38 +66,38 @@ func main() {
 			game.RespawnTime = max(0, game.RespawnTime-game.DM)
 			if game.RespawnTime == 0 {
 				game.GameState = 0
-				game.Player.X = lastStoodOn.X + (lastStoodOn.Width / 2) - (game.Player.Size / 2)
-				game.Player.Y = lastStoodOn.Y - (game.Player.Size)
+				game.Player.X = game.LastStoodOn.X + (game.LastStoodOn.Width / 2) - (game.Player.Size / 2)
+				game.Player.Y = game.LastStoodOn.Y - (game.Player.Size)
 				game.Player.Hsp = 0
 				game.Player.Vsp = 0
 			}
 		} else if game.GameState == 2 {
 			// state 2: game won and camera scrolling down
 
-			if math.Abs(float64(tweenCameraY)-float64(cameraY)) < 1 {
+			if math.Abs(float64(game.TweenCameraY)-float64(game.CameraY)) < 1 {
 				game.RespawnTime = max(0, game.RespawnTime-game.DM)
 			}
 			if game.RespawnTime == 0 {
 				game.RespawnTime = 0
 				game.SpawnBlocks(numberBlocks, float32(firstHeight), float32(gapSize), float32(groundHeight))
 				game.GameState = 0
-				lastStoodOn = &game.Blocks[0]
+				game.LastStoodOn = &game.Blocks[0]
 				game.CurrentLevel = 0
-				cameraSpeed = 0.1
-				cameraMaxSpeed = float32(math.Inf(1))
+				game.CameraSpeed = 0.1
+				game.CameraMaxSpeed = float32(math.Inf(1))
 				game.Player = NewPlayer(float32(rl.GetScreenWidth()/4), float32(rl.GetScreenHeight()-100-50), &game)
 			}
 		}
 
 		// tween camera and follow player above a certain point
-		cameraY = float32(math.Min(cameraLowerBound, float64(float32(int32(game.Player.Y))-float32(rl.GetScreenHeight())+float32(rl.GetScreenHeight()))))
-		tweenCameraY = tweenCameraY + rl.Clamp(cameraY-tweenCameraY, -cameraMaxSpeed, cameraMaxSpeed)*(cameraSpeed*game.DM)
-		camera.Target.Y = tweenCameraY - float32(rl.GetScreenHeight())
+		game.CameraY = float32(math.Min(game.CameraLowerBound, float64(float32(int32(game.Player.Y))-float32(rl.GetScreenHeight())+float32(rl.GetScreenHeight()))))
+		game.TweenCameraY = game.TweenCameraY + rl.Clamp(game.CameraY-game.TweenCameraY, -game.CameraMaxSpeed, game.CameraMaxSpeed)*(game.CameraSpeed*game.DM)
+		camera.Target.Y = game.TweenCameraY - float32(rl.GetScreenHeight())
 
 		if game.Player.OnGround && game.Player.Y < float32(firstHeightAbs)-float32(gapSize*game.CurrentLevel) {
 			game.CurrentLevel++
 			if game.CurrentLevel > 5 {
-				cameraLowerBound = float64(firstHeightAbs) - (float64(gapSize) * float64(game.CurrentLevel-1))
+				game.CameraLowerBound = float64(firstHeightAbs) - (float64(gapSize) * float64(game.CurrentLevel-1))
 			}
 		}
 
@@ -105,8 +105,8 @@ func main() {
 		if game.Player.OnGround {
 			ground := game.Player.PlayerInstancePlace(game.Player.X, game.Player.Y+2)
 
-			if ground != nil && ground.Y <= lastStoodOn.Y {
-				lastStoodOn = ground
+			if ground != nil && ground.Y <= game.LastStoodOn.Y {
+				game.LastStoodOn = ground
 			}
 		}
 
@@ -122,11 +122,21 @@ func main() {
 		// if the player collides with the goal, restart and reset the level
 		if game.GameState != 2 && CircleRectangleCollision(rl.NewVector2(game.Player.X, game.Player.Y), rl.NewVector2(game.Player.Size, game.Player.Size), rl.NewVector2(goal.X, goal.Y), goal.Radius) {
 			game.GameState = 2
-			cameraLowerBound = float64(rl.GetScreenHeight() / 2)
+			game.CameraLowerBound = float64(rl.GetScreenHeight() / 2)
 			game.RespawnTime = 30
 			game.Player.Y = game.Blocks[0].Y - game.Player.Size
-			cameraSpeed = 0.1
-			cameraMaxSpeed = 600
+			game.CameraSpeed = 0.1
+			game.CameraMaxSpeed = 600
+		}
+
+		// save game
+		if rl.IsKeyPressed(rl.KeyOne) {
+			game.SaveGame()
+		}
+
+		// load game
+		if rl.IsKeyPressed(rl.KeyTwo) {
+			game.LoadGame()
 		}
 
 		// << drawing >>
@@ -141,7 +151,7 @@ func main() {
 		if game.GameState != 2 {
 			game.Player.DrawPlayer()
 		}
-		rl.DrawRectangle(int32(rl.GetScreenWidth()/2)-int32(game.LineWidth)/2, int32(tweenCameraY-float32(rl.GetScreenHeight()/2)), int32(game.LineWidth), int32(rl.GetScreenHeight()), rl.Pink)
+		rl.DrawRectangle(int32(rl.GetScreenWidth()/2)-int32(game.LineWidth)/2, int32(game.TweenCameraY-float32(rl.GetScreenHeight()/2)), int32(game.LineWidth), int32(rl.GetScreenHeight()), rl.Pink)
 		rl.EndMode2D()
 
 		text := strconv.Itoa(min(game.CurrentLevel, numberBlocks))

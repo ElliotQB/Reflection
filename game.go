@@ -1,24 +1,49 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"math"
+	"os"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 type Game struct {
-	Blocks       []Block
-	Player       Player
-	Input        Input
-	LineWidth    float32
-	CurrentLevel int
-	RespawnTime  float32
-	GameState    float32
-	DM           float32
+	Blocks           []Block
+	Player           Player
+	Input            Input
+	LineWidth        float32
+	CurrentLevel     int
+	RespawnTime      float32
+	GameState        float32
+	DM               float32
+	SaveFilename     string
+	CameraY          float32
+	CameraSpeed      float32
+	CameraMaxSpeed   float32
+	TweenCameraY     float32
+	CameraLowerBound float64
+	LastStoodOn      *Block
 }
 
 func NewGame() Game {
-	return Game{[]Block{}, Player{}, Input{}, 20, 0, 0, 0, 1}
+	return Game{
+		[]Block{},
+		Player{},
+		Input{},
+		20,
+		0,
+		0,
+		0,
+		1,
+		"reflectionsave.sav",
+		float32(0),
+		float32(0.1),
+		float32(1000000),
+		float32(0),
+		float64(rl.GetScreenHeight() / 2),
+		nil}
 }
 
 func RectangleCollision(pos1 rl.Vector2, size1 rl.Vector2, pos2 rl.Vector2, size2 rl.Vector2) bool {
@@ -73,4 +98,27 @@ func MoveValue(val float32, dest float32, step float32) float32 {
 	} else {
 		return val
 	}
+}
+
+func (g *Game) SaveGame() error {
+	filename := g.SaveFilename
+
+	data, err := json.MarshalIndent(g, "", " ")
+
+	if err != nil {
+		fmt.Println("error while saving game")
+		return err
+	}
+	return os.WriteFile(filename, data, 0644)
+}
+
+func (g *Game) LoadGame() error {
+	filename := g.SaveFilename
+
+	data, err := os.ReadFile(filename)
+
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(data, g)
 }

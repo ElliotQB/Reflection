@@ -9,7 +9,7 @@ type Block struct {
 	Y              float32
 	Width          float32
 	Height         float32
-	Game           *Game
+	game           *Game
 	Reflect        bool
 	DrawReflection bool
 }

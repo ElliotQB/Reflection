@@ -1,0 +1,545 @@
+{
+ "Blocks": [
+  {
+   "X": 0,
+   "Y": 670,
+   "Width": 640,
+   "Height": 50,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 0,
+   "Y": 670,
+   "Width": 640,
+   "Height": 50,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 103.93352,
+   "Y": 510,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 7.542393,
+   "Y": 360,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 116.644745,
+   "Y": 210,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 334.94247,
+   "Y": 60,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 245.51756,
+   "Y": -90,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 236.63538,
+   "Y": -240,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 238.50589,
+   "Y": -390,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 370.757,
+   "Y": -540,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 448.08762,
+   "Y": -690,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 371.32318,
+   "Y": -840,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 344.0739,
+   "Y": -990,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 356.47037,
+   "Y": -1140,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 535.77783,
+   "Y": -1290,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 170.90714,
+   "Y": -1440,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 341.55225,
+   "Y": -1590,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 127.59569,
+   "Y": -1740,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 69.658104,
+   "Y": -1890,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 268.12134,
+   "Y": -2040,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 350.62027,
+   "Y": -2190,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 203.35037,
+   "Y": -2340,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 443.78677,
+   "Y": -2490,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 535.7491,
+   "Y": -2640,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 243.95355,
+   "Y": -2790,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 273.43695,
+   "Y": -2940,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 130.08986,
+   "Y": -3090,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 87.39645,
+   "Y": -3240,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 492.63727,
+   "Y": -3390,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 170.01634,
+   "Y": -3540,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 238.64908,
+   "Y": -3690,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 275.70688,
+   "Y": -3840,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 50.7606,
+   "Y": -3990,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 259.80438,
+   "Y": -4140,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 458.47424,
+   "Y": -4290,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 491.98172,
+   "Y": -4440,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 265.8222,
+   "Y": -4590,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 441.35638,
+   "Y": -4740,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 162.12766,
+   "Y": -4890,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 260.9305,
+   "Y": -5040,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 476.96887,
+   "Y": -5190,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 53.398705,
+   "Y": -5340,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 376.80972,
+   "Y": -5490,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 421.41428,
+   "Y": -5640,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 224.53871,
+   "Y": -5790,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 149.52261,
+   "Y": -5940,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 53.398705,
+   "Y": -5340,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 45.79149,
+   "Y": -6240,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 318.54208,
+   "Y": -6390,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 351.16428,
+   "Y": -6540,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 253.68475,
+   "Y": -6690,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 434.5466,
+   "Y": -6840,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 4.6273575,
+   "Y": -6990,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 413.18985,
+   "Y": -7140,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 74.00921,
+   "Y": -7290,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 412.96997,
+   "Y": -7440,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 89.743004,
+   "Y": -7590,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 57.84025,
+   "Y": -7740,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 21.454689,
+   "Y": -7890,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  },
+  {
+   "X": 445.0771,
+   "Y": -8040,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 363.79224,
+   "Y": -8190,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": true,
+   "DrawReflection": false
+  },
+  {
+   "X": 477.8605,
+   "Y": -8340,
+   "Width": 100,
+   "Height": 30,
+   "Reflect": false,
+   "DrawReflection": false
+  }
+ ],
+ "Player": {
+  "X": 212.62961,
+  "Y": -6062.392,
+  "Hsp": 0,
+  "Vsp": 9.702019,
+  "MaxHsp": 7,
+  "AccelXGround": 1,
+  "DecelXGround": 1,
+  "AccelXAir": 0.4,
+  "DecelXAir": 0.2,
+  "Grv": 0.35,
+  "OnGround": false,
+  "OnGroundCT": false,
+  "CTTime": 8,
+  "CTCurrentTime": 0,
+  "JumpStrength": -12,
+  "JumpBuffer": 0,
+  "SetJumpBuffer": 10,
+  "Size": 50
+ },
+ "Input": {
+  "Left": false,
+  "Right": false,
+  "Jump": false,
+  "JumpInstant": false
+ },
+ "LineWidth": 20,
+ "CurrentLevel": 44,
+ "RespawnTime": 0,
+ "GameState": 0,
+ "DM": 1.000026,
+ "SaveFilename": "reflectionsave.sav",
+ "CameraY": -6062,
+ "CameraSpeed": 0.1,
+ "CameraMaxSpeed": 1000000,
+ "TweenCameraY": -6121.107,
+ "CameraLowerBound": -5940,
+ "LastStoodOn": {
+  "X": 149.52261,
+  "Y": -5940,
+  "Width": 100,
+  "Height": 30,
+  "Reflect": false,
+  "DrawReflection": false
+ }
+}

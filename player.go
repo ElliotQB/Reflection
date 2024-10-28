@@ -25,7 +25,7 @@ type Player struct {
 	JumpBuffer    float32
 	SetJumpBuffer float32
 	Size          float32
-	Game          *Game
+	game          *Game
 }
 
 func NewPlayer(x float32, y float32, gameState *Game) Player {
@@ -56,10 +56,10 @@ func (p *Player) PlayerTick() {
 	if p.CTCurrentTime == 0 && !p.OnGround {
 		p.OnGroundCT = false
 	}
-	p.CTCurrentTime = max(0, p.CTCurrentTime-p.Game.DM)
+	p.CTCurrentTime = max(0, p.CTCurrentTime-p.game.DM)
 
 	// get input for horizontal movement
-	moveX := BoolToInt(p.Game.Input.Right) - BoolToInt(p.Game.Input.Left)
+	moveX := BoolToInt(p.game.Input.Right) - BoolToInt(p.game.Input.Left)
 
 	// clean accel/decel variables
 	accelX := p.AccelXAir
@@ -71,19 +71,19 @@ func (p *Player) PlayerTick() {
 
 	// accellerate or decelerate player based on what direction they're pressing
 	if moveX == 1 {
-		p.Hsp = min(p.MaxHsp, p.Hsp+(accelX*p.Game.DM))
+		p.Hsp = min(p.MaxHsp, p.Hsp+(accelX*p.game.DM))
 	} else if moveX == -1 {
-		p.Hsp = max(-p.MaxHsp, p.Hsp-(accelX*p.Game.DM))
+		p.Hsp = max(-p.MaxHsp, p.Hsp-(accelX*p.game.DM))
 	} else {
-		p.Hsp = MoveValue(p.Hsp, 0, (decelX * p.Game.DM))
+		p.Hsp = MoveValue(p.Hsp, 0, (decelX * p.game.DM))
 	}
 
 	// pull the player down with gravity
-	p.Vsp += (p.Grv * p.Game.DM)
+	p.Vsp += (p.Grv * p.game.DM)
 
 	// jump
-	p.JumpBuffer = max(0, p.JumpBuffer-p.Game.DM)
-	if p.Game.Input.JumpInstant {
+	p.JumpBuffer = max(0, p.JumpBuffer-p.game.DM)
+	if p.game.Input.JumpInstant {
 		p.JumpBuffer = p.SetJumpBuffer
 	}
 	if p.JumpBuffer > 0 && p.OnGroundCT {
@@ -93,7 +93,7 @@ func (p *Player) PlayerTick() {
 	}
 
 	// horizontal collision
-	if p.PlayerCollision(p.X+(p.Hsp*p.Game.DM), p.Y) {
+	if p.PlayerCollision(p.X+(p.Hsp*p.game.DM), p.Y) {
 		p.X = float32(math.Round(float64(p.X)))
 		for !p.PlayerCollision(p.X+Sign(p.Hsp), p.Y) {
 			p.X += Sign(p.Hsp)
@@ -102,7 +102,7 @@ func (p *Player) PlayerTick() {
 	}
 
 	// vertical collision
-	if p.PlayerCollision(p.X, p.Y+(p.Vsp*p.Game.DM)) {
+	if p.PlayerCollision(p.X, p.Y+(p.Vsp*p.game.DM)) {
 		p.Y = float32(math.Round(float64(p.Y)))
 		for !p.PlayerCollision(p.X, p.Y+Sign(p.Vsp)) {
 			p.Y += Sign(p.Vsp)
@@ -120,27 +120,27 @@ func (p *Player) PlayerTick() {
 		p.X = 0
 		p.Hsp = 0
 	}
-	if p.X > float32(rl.GetScreenWidth()/2)-(p.Game.LineWidth/2)-p.Size {
-		p.X = float32(rl.GetScreenWidth()/2) - (p.Game.LineWidth / 2) - p.Size
+	if p.X > float32(rl.GetScreenWidth()/2)-(p.game.LineWidth/2)-p.Size {
+		p.X = float32(rl.GetScreenWidth()/2) - (p.game.LineWidth / 2) - p.Size
 		p.Hsp = 0
 	}
 
 	// keep player from falling out of the world
 	if p.Y > float32(rl.GetScreenHeight()+100) {
 		p.X = float32(rl.GetScreenWidth() / 4)
-		p.Y = p.Game.Blocks[0].Y - p.Size
+		p.Y = p.game.Blocks[0].Y - p.Size
 		p.Hsp = 0
 		p.Vsp = 0
 	}
 
 	// apply speeds
-	p.X += p.Hsp * p.Game.DM
-	p.Y += p.Vsp * p.Game.DM
+	p.X += p.Hsp * p.game.DM
+	p.Y += p.Vsp * p.game.DM
 }
 
 func (p *Player) PlayerCollision(x float32, y float32) bool {
-	for i := 0; i < len(p.Game.Blocks); i++ {
-		block := p.Game.Blocks[i]
+	for i := 0; i < len(p.game.Blocks); i++ {
+		block := p.game.Blocks[i]
 
 		if RectangleCollision(rl.NewVector2(x, y), rl.NewVector2(p.Size, p.Size), rl.NewVector2(block.X, block.Y), rl.NewVector2(block.Width, block.Height)) {
 			return true
@@ -150,8 +150,8 @@ func (p *Player) PlayerCollision(x float32, y float32) bool {
 }
 
 func (p *Player) PlayerInstancePlace(x float32, y float32) *Block {
-	for i := 0; i < len(p.Game.Blocks); i++ {
-		block := &p.Game.Blocks[i]
+	for i := 0; i < len(p.game.Blocks); i++ {
+		block := &p.game.Blocks[i]
 
 		if RectangleCollision(rl.NewVector2(x, y), rl.NewVector2(p.Size, p.Size), rl.NewVector2(block.X, block.Y), rl.NewVector2(block.Width, block.Height)) {
 			return block
